@@ -10,28 +10,20 @@ class TaskController
     private Task $taskModel;
     private UserController $userController;
 
-    public function __construct(Task $task, UserController $userController)
+    public function __construct(Task $taskModel)
     {
-        $this->taskModel = $task;
-        $this->userController = $userController;
+        $this->taskModel = $taskModel;
     }
 
     public function handleRequest()
     {
         $action = $_GET['action'] ?? '';
 
-        if (in_array($action, ['create', 'update', 'delete']) && !$this->userController->isLoggedIn()) {
-            header("Location: login.php");
-            exit;
-        }
-
         switch ($action) {
             case 'create':
-                // ...
-            case 'update':
-                // ...
-            case 'delete':
-                // ...
+                $this->createTask();
+                break;
+            // ...
             default:
                 $this->listTasks();
         }
@@ -40,25 +32,34 @@ class TaskController
     public function listTasks()
     {
         $tasks = $this->taskModel->getAll();
-        require_once __DIR__ . '../../view/task/list_task.php';
-
+        return $tasks;
     }
 
     public function createTask()
     {
-        $task = [
-            'title' => $_POST['title'],
-            'description' => $_POST['description'],
-            'deadline' => $_POST['deadline'],
-        ];
-        
-        $result = $this->taskModel->create($task);
-
-        if ($result) {
-            header("Location: index.php");
+        if(!$this->userController->isLoggedIn()){
+            header("Location: login.php");
             exit;
+        }
+
+        if($_SERVER["REQUEST_METHOD"] === "POST"){
+            $task = [
+                'title' => $_POST['title'],
+                'description' => $_POST['description'],
+                'deadline' => $_POST['deadline'],
+            ];
+
+            $result = $this->taskModel->create($task);
+
+            if ($result) {
+                header("Location: index.php");
+                exit;
+            } else {
+                echo "Erro ao criar task";
+            }
         } else {
-            echo "Erro ao criar task";
+            // Render task creation form
         }
     }
 }
+

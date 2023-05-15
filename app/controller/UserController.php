@@ -6,18 +6,37 @@ use App\Model\User;
 
 class UserController
 {
-    private $userModel;
+    private User $userModel;
 
-    public function __construct()
+    public function __construct(User $userModel)
     {
-        $this->userModel = new User();
+        $this->userModel = $userModel;
     }
 
-    public function index()
+    public function register(array $userData): bool
     {
-        $users = $this->userModel->getAll();
-        require_once 'app/view/user/index.php';
+        return $this->userModel->create($userData);
     }
 
-    // Outros métodos relacionados a usuários (create, update, delete, etc.)
+    public function login(array $credentials): bool
+    {
+        $user = $this->userModel->authenticate($credentials['email'], $credentials['password']);
+
+        if ($user) {
+            $_SESSION['user_id'] = $user['id'];
+            return true;
+        }
+
+        return false;
+    }
+
+    public function logout(): void
+    {
+        session_destroy();
+    }
+
+    public function isLoggedIn(): bool
+    {
+        return isset($_SESSION['user_id']);
+    }
 }

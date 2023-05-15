@@ -16,6 +16,27 @@ class User
         $this->db = (new Database($config))->connect();
     }
 
+    public function authenticate(string $email, string $password): ?array
+    {
+        $sql = "SELECT * FROM users WHERE email = :email";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['password'])) {
+            return $user;
+        }
+
+        return null;
+    }
+
+    public function isLoggedIn(): bool
+    {
+        return isset($_SESSION['user_id']);
+    }
+
     public function getAll(): array
     {
         $stmt = $this->db->prepare('SELECT * FROM users');
@@ -48,16 +69,16 @@ class User
         $username = $updateData['username'];
         $email = $updateData['email'];
         $password = password_hash($updateData['password'], PASSWORD_DEFAULT);
-    
+
         $stmt = $this->db->prepare("UPDATE users SET username = :username, email = :email, password = :password WHERE id = :id");
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':password', $password);
         $stmt->bindParam(':id', $id);
-    
+
         return $stmt->execute();
     }
-    
+
 
     public function delete(int $id): bool
     {

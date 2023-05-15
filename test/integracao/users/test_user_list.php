@@ -1,6 +1,7 @@
 <?php
-require_once 'app/config.php';
+require_once 'config/config.php';
 require_once 'app/model/User.php';
+require_once 'config/database.php';
 use App\Model\User;
 use App\Config;
 use App\Database;
@@ -10,4 +11,4 @@ $database = new Database($config);
 
 $userModel = new User($database);
 $users = $userModel->getAll();
-var_dump($users);
+echo json_encode($users);

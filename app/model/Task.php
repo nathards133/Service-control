@@ -29,4 +29,21 @@ class Task
         $stmt->bindValue(':deadline', $task['deadline']->format('Y-m-d'));
         return $stmt->execute();
     }
+
+    public function update(array $task): bool
+    {
+        $stmt = $this->db->prepare('UPDATE tasks SET title = :title, description = :description, deadline = :deadline WHERE id = :id');
+        $stmt->bindValue(':title', $task['title']);
+        $stmt->bindValue(':description', $task['description']);
+        $stmt->bindValue(':deadline', $task['deadline']->format('Y-m-d'));
+        $stmt->bindValue(':id', $task['id']);
+        return $stmt->execute();
+    }
+
+    public function delete(array $task): bool
+    {
+        $stmt = $this->db->prepare('DELETE FROM tasks WHERE id = :id');
+        $stmt->bindValue(':id', $task['id']);
+        return $stmt->execute();
+    }
 }

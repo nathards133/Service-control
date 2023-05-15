@@ -7,6 +7,14 @@
 <body>
 <h1>Task List</h1>
 
+<?php if ($userController->isLoggedIn()): ?>
+    <p>Olá, <?php echo $_SESSION['user_id']; ?></p>
+    <a href="logout.php">Logout</a>
+<?php else: ?>
+    <a href="../login.php">Login</a>
+    <a href="../register.php">Register</a>
+<?php endif; ?>
+
 <?php if ($tasks): ?>
     <table>
         <tr>
