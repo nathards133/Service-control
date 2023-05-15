@@ -11,8 +11,8 @@
     <p>Olá, <?php echo $_SESSION['user_id']; ?></p>
     <a href="logout.php">Logout</a>
 <?php else: ?>
-    <a href="../login.php">Login</a>
-    <a href="../register.php">Register</a>
+    <a href="/login.php">Login</a>
+    <a href="/register.php">Register</a>
 <?php endif; ?>
 
 <?php if ($tasks): ?>

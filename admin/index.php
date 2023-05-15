@@ -17,9 +17,9 @@ $userController = new UserController(new User($database));
 $taskController = new TaskController($taskModel, $userController);
 
 if (!$userController->isLoggedIn()) {
-    header("Location: ../app/view/login.php");
+    header("Location: /login.php");
     exit;
 }
 
-
 $taskController->handleRequest();
+
