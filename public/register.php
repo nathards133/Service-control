@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>Registrar Usuário</h1>
-    <form action="UserController.php?action=register" method="post">
+    <form action="app/controller/UserController.php?action=register" method="post">
         <label for="username">Nome de usuário:</label>
         <input type="text" name="username" id="username" required><br>
 

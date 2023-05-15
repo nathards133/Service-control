@@ -58,7 +58,9 @@ class User
         $stmt = $this->db->prepare('INSERT INTO users (username, email, password) VALUES (:username, :email, :password)');
         $stmt->bindParam(':username', $data['username'], PDO::PARAM_STR);
         $stmt->bindParam(':email', $data['email'], PDO::PARAM_STR);
-        $stmt->bindParam(':password', $data['password'], PDO::PARAM_STR);
+        $passwordHash = password_hash($data['password'], PASSWORD_DEFAULT);
+        $stmt->bindParam(':password', $passwordHash, PDO::PARAM_STR);
+
 
         return $stmt->execute();
     }
